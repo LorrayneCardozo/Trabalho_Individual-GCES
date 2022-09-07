@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   database:
+    container_name: database
     image: postgres:latest
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -8,3 +9,14 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - '5432:5432'
+  backend:
+    build: .
+    container_name: backend
+    environment:
+        - DJANGO_SETTINGS_MODULE=src.settings
+    volumes:
+        - .:/code
+    ports:
+        - 8000:8000
+    depends_on:
+        - database
