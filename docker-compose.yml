@@ -9,14 +9,28 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - '5432:5432'
+
   backend:
-    build: .
+    build: ./library_back
     container_name: backend
+    restart: always
+    working_dir: /code/library_back
     environment:
-        - DJANGO_SETTINGS_MODULE=src.settings
+      - DJANGO_SETTINGS_MODULE=src.settings
     volumes:
-        - .:/code
+      - .:/code/
     ports:
         - 8000:8000
     depends_on:
         - database
+
+  frontend:
+    build: ./library_front
+    container_name: frontend
+    restart: always
+    working_dir: /app/library_front
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
