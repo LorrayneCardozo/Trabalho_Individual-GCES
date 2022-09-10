@@ -34,3 +34,13 @@ services:
       - /app/node_modules
     ports:
       - "3000:3000"
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+      - backend
+      - frontend
