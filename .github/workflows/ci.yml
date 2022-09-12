@@ -28,3 +28,19 @@ jobs:
       - name: Build backend e frontend
         working-directory: ./
         run: docker-compose up -d
+
+  tests:
+    runs-on:  ubuntu-latest
+    needs: UP_Test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Docker-compose
+        run: docker-compose up -d
+      - name: Run backend makemigration
+        run: docker-compose exec -T backend python manage.py makemigrations
+      - name: Run backend migrate fake 
+        run: docker-compose exec -T backend python manage.py migrate --fake
+      - name: Run backend test 
+        run: docker-compose exec -T backend python manage.py test
+      - name: Run frontend tests
+        run: docker-compose exec -T frontend npm test -- --watchAll=false
