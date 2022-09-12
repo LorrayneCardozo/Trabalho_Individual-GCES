@@ -30,16 +30,9 @@ jobs:
         run: docker-compose up -d
 
   test:
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Docker-compose
-        run: docker-compose up -d
-      - name: Makemigration
-        run: docker-compose exec -T backend python manage.py makemigrations
-      - name: Migrate fake 
-        run: docker-compose exec -T backend python manage.py migrate --fake
-      - name: Test back
-        run: docker-compose exec -T backend python manage.py test
-      - name: Test front
-        run: docker-compose exec -T frontend npm test -- --watchAll=false
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: teste
+        run: docker-compose run app sh -c "python manage.py makemigrations; python manage.py migrate; python manage.py test"
