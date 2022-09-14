@@ -29,18 +29,21 @@ jobs:
         working-directory: ./
         run: docker-compose up -d
 
-  test:
+  test-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: teste
+      - name: Teste backend
         run: docker-compose run backend sh -c "python manage.py makemigrations; python manage.py migrate; python manage.py test"
 
-  lint:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-          run: docker-compose run backend sh -c "pip install flake8; flake8 . --exit-zero"
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: docker-compose up --build -d
+      - name: Teste frontend
+        run: docker exec frontend sh -c "CI=true npm test --watchAll=false"
         
